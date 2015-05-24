@@ -1,0 +1,43 @@
+---
+title: "Machine Learning Prediction Assignment Writeup"
+author: "Chandra Prakash"
+date: "Sunday, May 24, 2015"
+output: html_document
+---
+The goal of this assignment is to build a prediction model on Weight Lifting Exercise data provided which will predict the exercise performance class variable.
+
+###Study Design
+ Finally randomForest was used to build the model due to speed as well as the ability of random fores models to avoid overfitting to training data. 
+
+###Preparing Data
+The data files were read into R. Summary and View functions were used to explore training data.
+A number of varibles were eliminated from study as they were not relevant or contained too many missing values. The selected set of variables was used to build the training set. 
+```{r warning=FALSE, message=FALSE}
+library(caret);
+library(randomForest);
+set.seed(12345);
+train <- read.csv("C:/coursera/pml/pml-training.csv");
+names <- c("roll_belt", "pitch_belt", "yaw_belt", "total_accel_belt", "gyros_belt_y", "gyros_belt_z", "accel_belt_x", "accel_belt_y", "accel_belt_z", "magnet_belt_x", "magnet_belt_y", "magnet_belt_z", "roll_arm", "pitch_arm", "yaw_arm", "total_accel_arm", "gyros_arm_x", "gyros_arm_y", "gyros_arm_z", "accel_arm_x", "accel_arm_y", "accel_arm_z", "magnet_arm_x", "magnet_arm_y", "magnet_arm_z", "roll_dumbbell", "pitch_dumbbell", "yaw_dumbbell", "gyros_dumbbell_x", "gyros_dumbbell_y","gyros_dumbbell_z", "accel_dumbbell_x", "accel_dumbbell_y", "accel_dumbbell_z", "magnet_dumbbell_x", "magnet_dumbbell_y", "magnet_dumbbell_z", "roll_forearm", "pitch_forearm", "yaw_forearm", "total_accel_forearm", "gyros_forearm_x", "gyros_forearm_y", "gyros_forearm_z", "accel_forearm_x", "accel_forearm_y", "accel_forearm_z", "magnet_forearm_x", "magnet_forearm_y", "magnet_forearm_z", "classe");
+train <- train[,names];
+test <- read.csv("C:/coursera/pml/pml-testing.csv");
+```
+
+###Generating Model
+Various learning methods were tried on training set e.g. Tree, Random Forest with different training parameters. Finally randomForest was used to build the model due to speed as well as the ability of random forest models to avoid overfitting to training data.
+```{r}
+#Model was cached after first run.
+#modelFit <- randomForest(classe ~ ., data=train);
+#saveRDS("modelFit")
+modelFit <- readRDS("modelFit")
+modelFit;
+```
+
+Estimate of  out of sample error rate: 0.32%
+
+###Predicting with generated model
+The generated model was applied to test data to generate predictions.
+```{r}
+answers <- predict(modelFit, newdata=test);
+answers
+```
+
